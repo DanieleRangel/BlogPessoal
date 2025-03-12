@@ -41,13 +41,26 @@ public class Postagem {
 	@JsonIgnoreProperties("postagem")
 	private Tema tema; //adicionando o objeto tema (id,descrição)
 	
+	@ManyToOne// Classe postagem muitas, tema é uma só
+	@JsonIgnoreProperties("postagem")
+	private Usuario usuario; 
+	
 	// gerar getters e setters (source -> Generate Getters and Setters)
 	public Long getId() {
 		return id;
 	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
 	public String getTitulo() {
 		return titulo;
 	}
