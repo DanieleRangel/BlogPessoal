@@ -27,7 +27,7 @@ public class JwtService {
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 
-	//claims recebe os dados do usuario
+	// recupera as informações do token. claims recebe os dados do usuario
 	private Claims extractAllClaims(String token) {
 		return Jwts.parserBuilder()
 				.setSigningKey(getSignKey()).build()
@@ -40,23 +40,28 @@ public class JwtService {
 		return claimsResolver.apply(claims);
 	}
 
+	//extrai o user name do token
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
 	}
 
+	//extrai data que o token deve expirar
 	public Date extractExpiration(String token) {
 		return extractClaim(token, Claims::getExpiration);
 	}
 
+	//valida que o token não expirou ainda
 	private Boolean isTokenExpired(String token) {
 		return extractExpiration(token).before(new Date());
 	}
-
+	
+	//verifica validade do usuario e validade do token
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = extractUsername(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
-
+	
+	//forma o token com seus claims (informações) e assinatura
 	private String createToken(Map<String, Object> claims, String userName) {
 		return Jwts.builder()
 					.setClaims(claims)
@@ -66,6 +71,11 @@ public class JwtService {
 					.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}
 
+	/*
+	 * data atual + 1000 *60 *60 => 1h
+	 */
+	
+	//gera o toke chamando o metodo anterior
 	public String generateToken(String userName) {
 		Map<String, Object> claims = new HashMap<>();
 		return createToken(claims, userName);
