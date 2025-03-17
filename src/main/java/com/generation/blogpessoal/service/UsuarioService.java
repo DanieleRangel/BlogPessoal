@@ -19,19 +19,25 @@ import com.generation.blogpessoal.security.JwtService;
 @Service
 public class UsuarioService {
 
+	//injeção de dependencias da usuarioRepository
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
+	//injeção de dependencias da jwtService
 	@Autowired
     private JwtService jwtService;
 
+	//injeção de dependencias da authenticationManager
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    //método que garante que o usuário não seja duplicado (mesmo e-mail)
 	public Optional<Usuario> cadastrarUsuario(Usuario usuario) {
 
+		// SELECT * FROM tb_usuarios WHERE usuario = "daniele@gmail.com"
+		// usuario ja cadastrado "daniele@gmail.com" -- Rodrigo
 		if (usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
 			return Optional.empty();
+		//"daniele@gmail.com"
 
 		usuario.setSenha(criptografarSenha(usuario.getSenha()));
 
@@ -76,7 +82,7 @@ public class UsuarioService {
 			if (usuario.isPresent()) {
 
                 // Preenche o Objeto usuarioLogin com os dados encontrados 
-			   usuarioLogin.get().setId(usuario.get().getId());
+			    usuarioLogin.get().setId(usuario.get().getId());
                 usuarioLogin.get().setNome(usuario.get().getNome());
                 usuarioLogin.get().setFoto(usuario.get().getFoto());
                 usuarioLogin.get().setToken(gerarToken(usuarioLogin.get().getUsuario()));
