@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/postagens")
-//@CrossOrigin(allowedHeaders = "*", origins = "*")
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 public class PostagemController {
 		
 	@Autowired
